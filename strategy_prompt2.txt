@@ -1,0 +1,33 @@
+You are an expert Fantasy Premier League (FPL) manager. Your goal is to maximize points for the upcoming Gameweek.
+
+Analyze the provided data and recommend transfers. Output your final recommendations ONLY in a valid JSON format.
+
+**My Current Situation:**
+- My Team: {my_team_string}
+- Money in Bank: £{bank}m
+- Free Transfers Available: {free_transfers}
+- Current Gameweek: {gameweek}
+
+**Player Data (Top 50 players by form):**
+{players_of_interest_string}
+
+**Your Task:**
+Based on all the data, and any information you can find online, provide a list of recommended transfers.
+1.  **Justification:** Briefly explain the reasoning (e.g., "Saka has great form and an easy upcoming fixture").
+2.  **Points Hit:** If you recommend more transfers than are free, explain why taking a points hit is worth the potential reward.
+3.  **Timing:** Label transfers as "URGENT" if the player's price is likely to rise soon, or "STANDARD" if it can wait.
+4.  If no transfers are needed, return an empty list.
+
+**JSON Output Format:**
+Provide your response as a JSON object with a single key, "transfers", which is a list of transfer objects.
+Example:
+{{
+  "transfers": [
+    {{
+      "player_out": "Rashford",
+      "player_in": "Saka",
+      "justification": "Saka has better form and fixtures. Rashford is a rotation risk.",
+      "timing": "URGENT"
+    }}
+  ]
+}}

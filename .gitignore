@@ -1,0 +1,13 @@
+# Secrets and configuration
+.env
+
+# Virtual Environment
+fpl-bot-env/
+
+# Python cache files
+__pycache__/
+*.pyc
+
+# OS-specific files
+.DS_Store
+Thumbs.db
