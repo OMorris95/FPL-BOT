@@ -62,12 +62,12 @@ def main():
         
         # --- TEMPORARY PRE-SEASON FIX ---
         # Comment out the live API call
-        # my_team_data = fpl_api.get_my_team(session)
+        my_team_data = fpl_api.get_my_team(session)
         
         # Load the local sample file instead
-        print("   -> NOTE: Using local 'my_team_sample.json' for pre-season testing.")
-        with open('my_team_sample.json') as f:
-            my_team_data = json.load(f)
+        #print("   -> NOTE: Using local 'my_team_sample.json' for pre-season testing.")
+        #with open('my_team_sample.json') as f:
+            #my_team_data = json.load(f)
         # ------------------------------
 
         print("✅ All data fetched successfully.")
