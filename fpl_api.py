@@ -10,7 +10,6 @@ HEADERS = {
 def login_and_get_session():
     """Logs into FPL and returns an authenticated session object."""
     session = requests.Session()
-    # This URL is on a different domain, so it's kept separate
     login_url = "https://users.premierleague.com/accounts/login/"
 
     payload = {
@@ -20,12 +19,13 @@ def login_and_get_session():
         "app": "plfpl-web"
     }
     
-    session.post(login_url, data=payload, headers=HEADERS)
+    # Login request
+    login_response = session.post(login_url, data=payload, headers=HEADERS)
     
-    # Verify session is authenticated
-    response = session.get(constants.API_URLS["me"], headers=HEADERS) 
+    # Verify session is authenticated by checking if we can access protected data
+    response = session.get(constants.API_URLS["user"].format(config.TEAM_ID), headers=HEADERS) 
     if response.status_code != 200:
-        raise Exception("Failed to authenticate session. Please check your credentials.")
+        raise Exception(f"Failed to authenticate session. Status: {response.status_code}. Please check your credentials.")
         
     return session
 
@@ -38,10 +38,40 @@ def get_me(session):
 
 def get_my_team(session):
     """Fetches the user's current team using an authenticated session."""
-    url = constants.API_URLS["user_team"].format(config.TEAM_ID) 
+    # Get bootstrap data to find current gameweek
+    bootstrap_data = get_bootstrap_data()
+    current_gameweek = next((event['id'] for event in bootstrap_data['events'] if event['is_current']), 1)
+    
+    # Use the picks endpoint instead of my-team which returns 403
+    url = constants.API_URLS["user_picks"].format(config.TEAM_ID, current_gameweek)
     response = session.get(url, headers=HEADERS)
     response.raise_for_status()
-    return response.json()
+    picks_data = response.json()
+    
+    # Also get transfer data from entry endpoint
+    entry_url = constants.API_URLS["user"].format(config.TEAM_ID)
+    entry_response = session.get(entry_url, headers=HEADERS)
+    entry_response.raise_for_status()
+    entry_data = entry_response.json()
+    
+    # Transform the data to match the expected format
+    transformed_data = {
+        'picks': picks_data['picks'],
+        'transfers': {
+            'limit': entry_data.get('last_deadline_total_transfers', 1) + 1,  # Add 1 for free transfer
+            'bank': picks_data['entry_history']['bank'],
+            'value': picks_data['entry_history']['value']
+        }
+    }
+    
+    # Add selling prices to picks - for now use current price as selling price
+    # (In reality, selling price might be different, but we don't have this data)
+    player_map = {p['id']: p for p in bootstrap_data['elements']}
+    for pick in transformed_data['picks']:
+        player = player_map.get(pick['element'])
+        pick['selling_price'] = player['now_cost'] if player else 0
+    
+    return transformed_data
 
 def get_bootstrap_data():
     """Fetches the main bootstrap-static data (all players, teams, etc.)."""
@@ -53,7 +83,22 @@ def get_bootstrap_data():
 def make_transfers(session, payload):
     """Submits the transfer payload to the FPL API."""
     url = constants.API_URLS["transfers"] 
-    response = session.post(url, json=payload, headers=HEADERS)
+    
+    # Add additional headers that might be required
+    transfer_headers = HEADERS.copy()
+    transfer_headers.update({
+        'Content-Type': 'application/json',
+        'Referer': 'https://fantasy.premierleague.com/'
+    })
+    
+    print(f"Making transfer request to: {url}")
+    print(f"Payload: {payload}")
+    
+    response = session.post(url, json=payload, headers=transfer_headers)
+    
+    print(f"Transfer response status: {response.status_code}")
+    print(f"Transfer response: {response.text}")
+    
     response.raise_for_status()
     return response.status_code
 

@@ -1,0 +1,28 @@
+[2025-08-19 15:43:35] POINTS HIT: A hit of -4 was taken.
+[2025-08-19 15:43:35] Gameweek Summary for GW1:
+[2025-08-19 15:43:35]   - Points: 49
+[2025-08-19 15:43:35]   - Points Deducted: -0
+[2025-08-19 15:43:35]   - Captain: M.Salah
+[2025-08-19 15:43:35]   - Vice-Captain: Palmer
+[2025-08-19 15:43:35]   - Chip Played: bboost
+[2025-08-19 15:43:35]   - Bench: 
+[2025-08-19 15:47:55] POINTS HIT: A hit of -4 was taken.
+[2025-08-19 15:54:02] POINTS HIT: A hit of -4 was taken.
+[2025-08-19 15:55:17] POINTS HIT: A hit of -4 was taken.
+[2025-08-19 16:02:03] POINTS HIT: A hit of -4 was taken.
+[2025-08-19 16:03:47] POINTS HIT: A hit of -4 was taken.
+[2025-08-19 16:06:13] POINTS HIT: A hit of -4 was taken.
+[2025-08-19 16:06:49] POINTS HIT: A hit of -4 was taken.
+[2025-08-19 16:12:26] POINTS HIT: A hit of -4 was taken.
+[2025-08-19 16:13:07] POINTS HIT: A hit of -4 was taken.
+[2025-08-19 16:15:02] POINTS HIT: A hit of -4 was taken.
+[2025-08-19 16:15:36] POINTS HIT: A hit of -4 was taken.
+[2025-08-19 16:20:18] POINTS HIT: A hit of -4 was taken.
+[2025-08-19 16:26:04] POINTS HIT: A hit of -4 was taken.
+[2025-08-19 16:27:34] POINTS HIT: A hit of -4 was taken.
+[2025-08-19 16:29:51] POINTS HIT: A hit of -4 was taken.
+[2025-08-19 16:32:51] POINTS HIT: A hit of -4 was taken.
+[2025-08-19 16:40:18] POINTS HIT: A hit of -4 was taken.
+[2025-08-19 16:42:33] POINTS HIT: A hit of -4 was taken.
+[2025-08-19 16:45:24] POINTS HIT: A hit of -4 was taken.
+[2025-08-19 16:46:26] POINTS HIT: A hit of -4 was taken.

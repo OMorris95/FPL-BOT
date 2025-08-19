@@ -8,7 +8,7 @@ from email.message import EmailMessage
 def _send_approval_email(ai_response, config):
     """Sends an email notification when a points hit is required."""
     msg = EmailMessage()
-    msg.set_content(f"FPL Bot requires approval for a transfer with a points hit.\n\nRecommendations:\n{json.dumps(ai_response, indent=2)}")
+    msg.set_content(f"FPL Bot requires approval for a transfer with a points hit.\n\nRecommendations:\n{json.dumps(ai_response, indent=2, ensure_ascii=False)}")
     msg['Subject'] = 'FPL Bot: Manual Approval Required'
     msg['From'] = config.EMAIL_ADDRESS
     msg['To'] = config.EMAIL_RECIPIENT
@@ -51,10 +51,12 @@ def _prepare_transfer_payload(transfers_to_make, team_id, gameweek, player_id_ma
         })
 
     return {
-        "chips": None,
-        "entry": team_id,
+        "confirmed": False,
+        "entry": int(team_id),
         "event": gameweek,
-        "transfers": payload_transfers
+        "transfers": payload_transfers,
+        "wildcard": False,
+        "freehit": False
     }
 
 def execute_transfers(session, payload):
@@ -101,7 +103,7 @@ def handle_ai_recommendations(session, ai_response, config, bootstrap_data, my_t
     # --- Autonomy Logic ---
     if config.USER_MODE == 'suggest':
         print("Operating in 'suggest' mode. Here are the recommendations:")
-        print(json.dumps(ai_response, indent=2))
+        print(json.dumps(ai_response, indent=2, ensure_ascii=False))
         print("Please make the transfers manually on the FPL website.")
         
     elif config.USER_MODE == 'hybrid':

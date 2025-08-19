@@ -42,20 +42,20 @@ def run_gameweek_summary(session, config, bootstrap_data):
                 logger.log_action(f"  - Vice-Captain: {vice_captain_name}")
                 logger.log_action(f"  - Chip Played: {active_chip}")
                 logger.log_action(f"  - Bench: {', '.join(bench)}")
-                print(f"✅ Logged summary for Gameweek {gw_id}.")
+                print(f"Logged summary for Gameweek {gw_id}.")
 
             except Exception as e:
-                print(f"❌ Failed to log summary for GW{gw_id}: {e}")
+                print(f"Failed to log summary for GW{gw_id}: {e}")
 
 def main():
     """Main function for the FPL AI Manager."""
-    print("🤖 Starting FPL AI Manager...")
+    print("Starting FPL AI Manager...")
 
     # --- Phase 1: Fetching FPL Data ---
     print("\n--- Phase 1: Fetching FPL Data ---")
     try:
         session = fpl_api.login_and_get_session()
-        print("✅ Login and session verified!")
+        print("Login and session verified!")
         
         bootstrap_data = fpl_api.get_bootstrap_data()
         fixtures_data = fpl_api.get_fixtures_data()
@@ -70,9 +70,9 @@ def main():
             #my_team_data = json.load(f)
         # ------------------------------
 
-        print("✅ All data fetched successfully.")
+        print("All data fetched successfully.")
     except Exception as e:
-        print(f"❌ Failed during data fetching: {e}")
+        print(f"Failed during data fetching: {e}")
         return
 
     # --- Phase 2: Processing Data and Consulting AI ---
@@ -86,18 +86,18 @@ def main():
     current_gameweek = next((event['id'] for event in bootstrap_data['events'] if event['is_next']), None)
     fixture_difficulty = data_processor.process_fixture_difficulty(bootstrap_data, fixtures_data, team_name_map)
     
-    # Calculate the total budget
-    total_budget = my_team_details.get('value', 0) + my_team_details.get('bank', 0)
+    # The API 'value' field appears to be total budget (squad + bank), not just squad value
+    total_budget = my_team_details.get('value', 0)
     
     # Get the new detailed squad breakdown strings
     squad_breakdown = data_processor.get_squad_by_position(my_team_data, bootstrap_data, team_name_map)
     team_distribution = data_processor.get_team_distribution(my_team_data, bootstrap_data, team_name_map)
     
-    print("✅ Data processed.")
+    print("Data processed.")
 
     # Build the prompt with all the new placeholders
     try:
-        with open('strategy_prompt.txt', 'r') as f:
+        with open('strategy_prompt.txt', 'r', encoding='utf-8') as f:
             prompt_template = f.read()
 
         prompt = prompt_template.format(
@@ -115,16 +115,16 @@ def main():
             players_of_interest_string=json.dumps(players_of_interest, indent=2)
         )
     except Exception as e:
-        print(f"❌ Error building prompt: {e}")
+        print(f"Error building prompt: {e}")
         return
         
-    print("🧠 Prompt created. Sending to AI for analysis...")
+    print("Prompt created. Sending to AI for analysis...")
     ai_response = llm_service.get_ai_recommendations(prompt)
     
     if not ai_response:
-        print("\n❌ AI analysis failed. Please check error messages above.")
+        print("\nAI analysis failed. Please check error messages above.")
         return
-    print("✅ AI analysis complete.")
+    print("AI analysis complete.")
 
     # --- Phase 3: Decision Making and Execution ---
     fpl_executor.handle_ai_recommendations(session, ai_response, config, bootstrap_data, my_team_data)
@@ -132,7 +132,7 @@ def main():
      # --- Run the post-gameweek summary logger ---
     run_gameweek_summary(session, config, bootstrap_data)
     
-    print("\n✅ FPL Bot run complete.")
+    print("\nFPL Bot run complete.")
 
 
 if __name__ == "__main__":

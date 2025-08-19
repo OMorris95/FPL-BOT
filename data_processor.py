@@ -113,7 +113,8 @@ def get_squad_by_position(my_team_data, bootstrap_data, team_name_map):
         price = player_detail['now_cost'] / 10.0
         player_name = player_detail['web_name']
         
-        formatted_string = f"{player_name} (£{price}m, {team_name})"
+        selling_price = pick['selling_price'] / 10.0
+        formatted_string = f"{player_name} (£{price}m, sells £{selling_price}m, {team_name})"
         squad_by_pos[position].append(formatted_string)
         
     return {
